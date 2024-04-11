@@ -1,13 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
 
-
-public class NPC : MonoBehaviour
+public class NPC2 : MonoBehaviour
 {
-    public float interactionRange = 2f; // The range within which the player can interact with the NPC
+    public float interactionRange = 1f; // The range within which the player can interact with the NPC
     public GameObject questMenuPanel; // Reference to the quest menu panel
     public TextMeshProUGUI interactionText; // Reference to the TextMeshPro text component
     public Quest quest; // The quest assigned to this NPC
@@ -48,10 +46,10 @@ public class NPC : MonoBehaviour
             questMenuPanel.SetActive(true);
         }
 
-        if (inRange && Input.GetKeyDown(KeyCode.F) && questManager.IsOnMission() && questManager.CanInteractWithNPC())
+        // Check if the player has completed the quest and enable the congratulatory panel
+        if (questManager.IsOnMission() && questManager.canInteractWithNPC && quest.isCompleted)
         {
             congratulatoryPanel.SetActive(true);
         }
-
     }
 }

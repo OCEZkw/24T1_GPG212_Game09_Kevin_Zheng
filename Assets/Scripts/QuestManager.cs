@@ -16,13 +16,16 @@ public class QuestManager : MonoBehaviour
 
     private Quest currentQuest;
     public GameObject questMenuPanel;
+    public GameObject congratulatoryPanel; 
     private bool isOnMission = false;
-    private bool canInteractWithNPC = true;
+    public bool canInteractWithNPC = true;
     public Inventory inventory;
+    public Timer timer;
 
     private void Awake()
     {
         inventory = FindObjectOfType<Inventory>();
+        timer = FindObjectOfType<Timer>();
 
         // Check if the inventory was found
         if (inventory == null)
@@ -51,26 +54,28 @@ public class QuestManager : MonoBehaviour
 
     public void CompleteQuest()
     {
-        currentQuest.isCompleted = true;
         isOnMission = false;
-        canInteractWithNPC = true; // Player can interact with NPC after completing the quest
-                                   // You can add rewards or other logic here for completing the quest
+        Debug.Log("Reward Given");
+        congratulatoryPanel.SetActive(false);
+        Inventory.instance.RemoveItem(new Item("TimeCapsule", "Time Capsule", 3));
+
+        // Add 2 minutes to the timer
+        if (timer != null)
+        {
+            timer.AddTime(120);
+        }
+        else
+        {
+            Debug.LogError("Timer script not found.");
+        }
     }
 
-    public void OnQuestAccepted()
+        public void OnQuestAccepted()
     {
         questMenuPanel.SetActive(false); // Hide the quest menu panel
         AcceptQuest(currentQuest);
     }
 
-    public void CheckQuestCompletion()
-    {
-        // Check if the current quest is to find 3 time capsules
-        if (currentQuest.questName == "Find Time Capsules" && Inventory.instance.GetItemCount("Time Capsule") >= currentQuest.requiredItemCount)
-        {
-            CompleteQuest();
-        }
-    }
 
     // Add a method to allow other scripts to check if the player is on a mission
     public bool IsOnMission()
@@ -83,4 +88,10 @@ public class QuestManager : MonoBehaviour
     {
         return canInteractWithNPC;
     }
+
+    public Quest CurrentQuest
+    {
+        get { return currentQuest; }
+    }
+
 }

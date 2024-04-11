@@ -9,10 +9,12 @@ public class Inventory : MonoBehaviour
 
     void Awake()
     {
+
         if (instance != null)
             Destroy(gameObject);
         else
             instance = this;
+
     }
 
     public void AddItem(Item itemToAdd)
@@ -68,5 +70,15 @@ public class Inventory : MonoBehaviour
             }
         }
         return count;
+    }
+
+    public void CheckTimeCapsulesCollected()
+    {
+        int timeCapsulesCollected = GetItemCount("Time Capsule");
+        if (timeCapsulesCollected >= 3)
+        {
+            Debug.Log("3 Collected");
+            QuestManager.instance.canInteractWithNPC = true;
+        }
     }
 }

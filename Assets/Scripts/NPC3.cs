@@ -1,11 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
 
-
-public class NPC : MonoBehaviour
+public class NPC3 : MonoBehaviour
 {
     public float interactionRange = 2f; // The range within which the player can interact with the NPC
     public GameObject questMenuPanel; // Reference to the quest menu panel
@@ -15,8 +13,11 @@ public class NPC : MonoBehaviour
     private Transform player;
     private bool inRange = false;
     private QuestManager questManager;
-    public GameObject congratulatoryPanel;
 
+    private void Awake()
+    {
+        questManager = QuestManager.instance;
+    }
     private void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player").transform;
@@ -36,22 +37,16 @@ public class NPC : MonoBehaviour
             inRange = false;
         }
 
-        // Show the interaction text when the player is in range
-        interactionText.gameObject.SetActive(inRange && questManager.CanInteractWithNPC());
+        // Show the interaction text when the player is in range and on the deliver mission
+        interactionText.gameObject.SetActive(inRange && questManager.CanInteractWithNPC() && questManager.CurrentQuest.questName == "Deliver Time Capsules");
 
         // Open the quest menu panel when 'F' is pressed and the player is in range
-        if (inRange && Input.GetKeyDown(KeyCode.F) && !questManager.IsOnMission())
+        if (inRange && Input.GetKeyDown(KeyCode.F) && !questManager.CanInteractWithNPC() && questManager.CurrentQuest.questName == "Deliver Time Capsules")
         {
             // Update the quest menu panel text with the quest assigned to this NPC
             QuestManager.instance.questNameText.text = quest.questName;
             QuestManager.instance.questDescriptionText.text = quest.questDescription;
             questMenuPanel.SetActive(true);
         }
-
-        if (inRange && Input.GetKeyDown(KeyCode.F) && questManager.IsOnMission() && questManager.CanInteractWithNPC())
-        {
-            congratulatoryPanel.SetActive(true);
-        }
-
     }
 }

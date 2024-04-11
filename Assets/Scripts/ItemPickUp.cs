@@ -14,11 +14,7 @@ public class ItemPickUp : MonoBehaviour
             Inventory.instance.AddItem(item);
             if (item.name == "Time Capsule")
             {
-                // Check if the player has collected 3 time capsules
-                if (Inventory.instance.GetItemCount("Time Capsule") >= 3)
-                {
-                    QuestManager.instance.CheckQuestCompletion();
-                }
+                Inventory.instance.CheckTimeCapsulesCollected();
             }
             Destroy(gameObject);
         }
