@@ -68,9 +68,43 @@ public class QuestManager : MonoBehaviour
         {
             Debug.LogError("Timer script not found.");
         }
+        // Generate a random number between 0 and 99
+        int randomNumber = Random.Range(0, 100);
+
+        // If the random number is less than 10 (10% chance), give the player a "Time Ticket" item
+        if (randomNumber < 10)
+        {
+            Item timeTicket = new Item("TimeTicket", "Time Ticket", 1);
+            inventory.AddItem(timeTicket);
+        }
     }
 
-        public void OnQuestAccepted()
+    public void CompleteQuest2()
+    {
+        congratulatoryPanel.SetActive(false);
+        isOnMission = false;
+        // Add 2 minutes to the timer
+        if (timer != null)
+        {
+            timer.AddTime(120);
+        }
+        else
+        {
+            Debug.LogError("Timer script not found.");
+        }
+
+        // Generate a random number between 0 and 99
+        int randomNumber = Random.Range(0, 100);
+
+        // If the random number is less than 10 (10% chance), give the player a "Time Ticket" item
+        if (randomNumber < 10)
+        {
+            Item timeTicket = new Item("TimeTicket", "Time Ticket", 1);
+            inventory.AddItem(timeTicket);
+        }
+    }
+
+    public void OnQuestAccepted()
     {
         questMenuPanel.SetActive(false); // Hide the quest menu panel
         AcceptQuest(currentQuest);

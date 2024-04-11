@@ -2,8 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-
-public class NPC2 : MonoBehaviour
+public class NPC4 : MonoBehaviour
 {
     public float interactionRange = 1f; // The range within which the player can interact with the NPC
     public GameObject questMenuPanel; // Reference to the quest menu panel
@@ -14,35 +13,15 @@ public class NPC2 : MonoBehaviour
     private bool inRange = false;
     private QuestManager questManager;
 
-    public string npcName;
-    private TextMeshProUGUI nameText;
-    private Canvas canvas;
-
-    private void Start()
+    // Start is called before the first frame update
+    void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player").transform;
         interactionText.gameObject.SetActive(false); // Hide the text by default
         questManager = QuestManager.instance;
-
-        // Create a world space canvas if it doesn't exist
-        CreateCanvas();
-
-        // Create a TextMeshPro component as a child of the canvas
-        CreateText();
-
-        // Find the TextMeshProUGUI component
-        nameText = GetComponentInChildren<TextMeshProUGUI>();
-        if (nameText != null)
-        {
-            // Set the text to the NPC's name
-            nameText.text = npcName;
-        }
-        else
-        {
-            Debug.LogError("TextMeshProUGUI component not found in children.");
-        }
     }
 
+    // Update is called once per frame
     private void Update()
     {
         // Check if the player is in range
@@ -56,10 +35,10 @@ public class NPC2 : MonoBehaviour
         }
 
         // Show the interaction text when the player is in range
-        interactionText.gameObject.SetActive(inRange && questManager.CanInteractWithNPC() && !questManager.IsOnMission());
+        interactionText.gameObject.SetActive(inRange);
 
         // Open the quest menu panel when 'F' is pressed and the player is in range
-        if (inRange && Input.GetKeyDown(KeyCode.F) && !questManager.IsOnMission())
+        if (inRange && Input.GetKeyDown(KeyCode.F))
         {
             // Update the quest menu panel text with the quest assigned to this NPC
             QuestManager.instance.questNameText.text = quest.questName.ToString();
@@ -73,21 +52,5 @@ public class NPC2 : MonoBehaviour
         }
 
     }
-    private void CreateCanvas()
-    {
-        canvas = gameObject.AddComponent<Canvas>();
-        canvas.renderMode = RenderMode.WorldSpace;
-        canvas.sortingOrder = 1; // Ensure canvas is rendered above other objects
-    }
-
-    private void CreateText()
-    {
-        GameObject textObject = new GameObject("NameText");
-        textObject.transform.SetParent(canvas.transform);
-        textObject.transform.localPosition = new Vector3(0, 0.5f, 0); // Position above NPC
-        TextMeshProUGUI textComponent = textObject.AddComponent<TextMeshProUGUI>();
-        textComponent.fontSize = 0.3f;
-        textComponent.alignment = TextAlignmentOptions.Center;
-        textComponent.text = npcName;
-    }
 }
+
